@@ -16,7 +16,7 @@ pipeline {
         stage('Pushing to DockerHub') {
             steps {
                 echo "Pushing to DockerHub"
-                withCredentials([usernamePassword(credentialsId: '  ', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker tag node-todo-cicd ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
                     sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD}"
                     sh "docker push ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
@@ -26,7 +26,7 @@ pipeline {
         stage('Deploying') {
             steps {
                 echo "Deploying to host"
-                sh "docker run -d DOCKERHUB_USERNAME/node-todo-cicd:latest"
+                sh "docker run -d $DOCKERHUB_USERNAME/node-todo-cicd:latest"
             }
         }
     }
