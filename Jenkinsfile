@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {label 'new-agent'}
     stages {
         stage('Cloning') {
             steps {
