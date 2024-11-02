@@ -1,39 +1,32 @@
 pipeline {
-    agent { label "dev-server"}
-    
+    agent any
     stages {
-        
-        stage("code"){
-            steps{
+        stage('Cloning') {
+            steps {
+                echo "Cloning the Repo"
                 git url: "https://github.com/LondheShubham153/node-todo-cicd.git", branch: "master"
-                echo 'bhaiyya code clone ho gaya'
             }
         }
-        stage("build and test"){
-            steps{
-                sh "docker build -t node-app-test-new ."
-                echo 'code build bhi ho gaya'
+        stage('Building') {
+            steps {
+                echo "Building the Repo"
+                sh "docker build . -t node-todo-cicd"
             }
         }
-        stage("scan image"){
-            steps{
-                echo 'image scanning ho gayi'
-            }
-        }
-        stage("push"){
-            steps{
-                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker tag node-app-test-new:latest ${env.dockerHubUser}/node-app-test-new:latest"
-                sh "docker push ${env.dockerHubUser}/node-app-test-new:latest"
-                echo 'image push ho gaya'
+        stage('Pushing to DockerHub') {
+            steps {
+                echo "Pushing to DockerHub"
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh "docker tag node-todo-cicd ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
+                    sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD}"
+                    sh "docker push ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
                 }
             }
         }
-        stage("deploy"){
-            steps{
-                sh "docker-compose down && docker-compose up -d"
-                echo 'deployment ho gayi'
+        stage('Deploying') {
+            steps {
+                echo "Deploying to host"
+                sh "docker run -d ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
             }
         }
     }
