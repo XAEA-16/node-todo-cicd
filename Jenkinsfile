@@ -18,7 +18,7 @@ pipeline {
                 echo "Pushing to DockerHub"
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker tag node-todo-cicd ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
-                    sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD}"
+                    sh "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
                     sh "docker push ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
                 }
             }
