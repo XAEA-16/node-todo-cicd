@@ -26,7 +26,7 @@ pipeline {
         stage('Deploying') {
             steps {
                 echo "Deploying to host"
-                sh "docker run -d $DOCKERHUB_USERNAME/node-todo-cicd:latest"
+                sh "docker run -d ${env.DOCKERHUB_USERNAME}/node-todo-cicd:latest"
             }
         }
     }
