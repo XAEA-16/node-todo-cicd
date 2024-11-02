@@ -26,8 +26,11 @@ pipeline {
         stage('Deploying') {
             steps {
                 echo "Deploying to host"
-                sh "docker run -d -p 8000:8000 teslaop/node-todo-cicd:latest"
+                sh "docker-compose down"
+                sh "docker-compose up -d"
             }
         }
     }
 }
+
+// teslaop/node-todo-cicd:latest
