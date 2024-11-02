@@ -12,9 +12,6 @@ const express = require('express'),
 
 
 
-
-
-
 app.use(bodyParser.urlencoded({
     extended: false
 }));
