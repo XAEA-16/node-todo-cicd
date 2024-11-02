@@ -27,7 +27,7 @@ pipeline {
             steps {
                 echo "Deploying to host"
                 sh "docker-compose down"
-                sh "docker-compose up -d"
+                sh "docker-compose up --build ."
             }
         }
     }
